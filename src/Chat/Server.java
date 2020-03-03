@@ -1,49 +1,97 @@
 package Chat;
-import java.net.*;
+import javax.swing.*;
+
+import java.awt.*;
 import java.io.*;
+import java.net.ServerSocket;
+import java.net.*;
+
+public class Server  {
+
+    public static void main(String[] args) {
+        // TODO Auto-generated method stub
+
+        MarcoServidor mimarco=new MarcoServidor();
+
+        mimarco.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+    }
+}
+
+class MarcoServidor extends JFrame implements Runnable {
+
+    public MarcoServidor(){
+
+        setBounds(1200,300,280,350);
+
+        JPanel milamina= new JPanel();
+
+        milamina.setLayout(new BorderLayout());
+
+        areatexto=new JTextArea();
+
+        milamina.add(areatexto,BorderLayout.CENTER);
+
+        add(milamina);
+
+        setVisible(true);
+
+        Thread mihilo=new Thread(this);
+
+        mihilo.start();
+    }
 
 
-public class Server {
-    private Socket socket;
-    private ServerSocket server;
-    private DataInputStream in;
-
-    //Constructor
-    public Server(int port){
+    @Override
+    public void run() {
         try {
-            server = new ServerSocket(port);
-            System.out.println("Server Started!");
-            System.out.println("Waiting for client...");
+            ServerSocket servidor = new ServerSocket(9999);
 
-            socket = server.accept();
-            System.out.println("Client Accepted");
+            String nick,ip,mensaje;
 
-            in = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
-            String line = "";
-
-            while (!line.equals("Over")){
-                try{
-                    line = in.readUTF();
-                    System.out.println(line);
-                }catch(IOException i){
-                    System.out.println(i);
-                }
+            PaqueteEnvio paquete_recibido;
 
 
+            while(true) {
+
+                Socket misocket = servidor.accept();
+
+                 ObjectInputStream paquete_datos = new ObjectInputStream(misocket.getInputStream());
+
+                 paquete_recibido = (PaqueteEnvio) paquete_datos.readObject();
+
+                 nick = paquete_recibido.getNick();
+
+                 ip = paquete_recibido.getIp();
+
+                 mensaje = paquete_recibido.getMensaje();
+
+
+
+                /*DataInputStream flujo_entrada = new DataInputStream(misocket.getInputStream());
+
+                String mensaje_texto = flujo_entrada.readUTF();
+
+                areatexto.append("\n" + mensaje_texto);*/
+
+                areatexto.append("\n" + nick + ": " + mensaje+ " para " + ip);
+
+                Socket enviaDestinatario = new Socket(ip,9090);
+
+                ObjectOutputStream paquete_Reenvio = new ObjectOutputStream(enviaDestinatario.getOutputStream());
+
+                paquete_Reenvio.writeObject(paquete_recibido);
+
+                paquete_Reenvio.close();
+
+                enviaDestinatario.close();
+
+                misocket.close();
             }
-            System.out.println("Closing connection...");
-            socket.close();
-            in.close();
-
-        }
-        catch(IOException i){
-            System.out.println(i);
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
         }
     }
-    public static void main(String args []){
-        Server server = new Server(5000);
 
-
-    }
-
+    private	JTextArea areatexto;
 }
