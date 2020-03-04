@@ -13,10 +13,14 @@ import java.net.*;
 public class Cliente {
     /**
      * Main creates the frame GUI used for the client canvas.
+     * Also, creates a new **instance** of a class ( in this case ClientFrame)
      */
     public static void main(String[] args) {
         // TODO Auto-generated method stub
-
+        /**
+         * .setDefaultCloseOperation works giving a command to the frame if you try to close it.
+         * In this case I chose the close it definitively.
+         */
         ClientFrame my_frame =new ClientFrame();
 
         my_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -25,9 +29,16 @@ public class Cliente {
 
 }
 
-
+/**
+ * Created a new class, its function is to create the physical appearance for the client frame
+ * @method extends gets methos from a library (JFrame); this is an example of **inheritance**.
+ */
 class ClientFrame extends JFrame{
-
+    /**
+     * setBounds is meant for giving the x,y where the canvas is going to be summoned; its width and height
+     * Then created the instance "my_canvas" as a new object from the class "ClientFrame_Canvas"
+     * Method add() places an instance on the ClientFrame.
+     */
     public ClientFrame(){
 
         setBounds(0,0,600,430);
