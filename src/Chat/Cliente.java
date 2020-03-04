@@ -1,8 +1,10 @@
 
 package Chat;
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.ColorModel;
 import java.io.*;
 import java.net.*;
 
@@ -45,6 +47,10 @@ class ClientFrame extends JFrame{
 
         ClientFrame_Canvas my_canvas = new ClientFrame_Canvas();
 
+        getContentPane().setBackground(Color.darkGray);
+
+        my_canvas.setBackground(Color.darkGray);
+
         add(my_canvas);
 
         setVisible(true);
@@ -59,25 +65,44 @@ class ClientFrame_Canvas extends JPanel implements Runnable{
         JLabel nick_label =new JLabel("Username:");
         add(nick_label);
 
+        nick_label.setForeground(Color.WHITE);
+        nick_label.setFont(new Font("SANS_SERIF", Font.BOLD, 16));
+
         username_input = new JTextField(10);
         add(username_input);
 
-        JLabel ip_label = new JLabel("       Receiver's IP Address:");
+        JLabel ip_label = new JLabel("Receiver's IP Address:");
         add(ip_label);
+
+        ip_label.setForeground(Color.WHITE);
+        ip_label.setFont(new Font("SANS_SERIF", Font.BOLD, 16));
 
         ip_input = new JTextField(15);
         add(ip_input);
 
         JLabel chat_label = new JLabel("\n" + "       CHAT:            ");
         add(chat_label);
+        chat_label.setForeground(Color.WHITE);
+        chat_label.setFont(new Font("SANS_SERIF", Font.BOLD, 22));
 
-        chat_frame = new JTextArea(17,48);
+        chat_frame = new JTextArea(16,48);
         add(chat_frame);
+
+        JLabel enter_text = new JLabel("Enter your message here " );
+        add(enter_text);
+        enter_text.setForeground(Color.WHITE);
+        enter_text.setFont(new Font("SANS_SERIF", Font.BOLD, 14));
+
+        JLabel arrows_text = new JLabel("↓ ↓ ↓" );
+        add(arrows_text);
+        arrows_text.setForeground(Color.WHITE);
+        arrows_text.setFont(new Font("SANS_SERIF", Font.BOLD, 14));
 
         text_input =new JTextField(45);
         add(text_input);
 
-        send_Button =new JButton("Enviar");
+        send_Button =new JButton("Send");
+
 
         EnviaTexto mievento = new EnviaTexto();
 
