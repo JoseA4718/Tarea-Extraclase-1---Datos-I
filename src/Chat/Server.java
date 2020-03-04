@@ -64,7 +64,7 @@ class Server_Frame extends JFrame implements Runnable {
 
                  ip_address = received_package.getIp();
 
-                 message = received_package.getMensaje();
+                 message = received_package.getMessage();
 
                 text_area.append("\n" + username + ": " + message + " sent a message to >> " + ip_address);
 
