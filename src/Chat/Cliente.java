@@ -11,7 +11,9 @@ import java.net.*;
  * This class is the one runnable, it starts a chain of class calling to complete the process.
  */
 public class Cliente {
-
+    /**
+     * Main creates the frame GUI used for the client canvas.
+     */
     public static void main(String[] args) {
         // TODO Auto-generated method stub
 
