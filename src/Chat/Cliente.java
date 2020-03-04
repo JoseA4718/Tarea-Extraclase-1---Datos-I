@@ -5,80 +5,73 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
 import java.net.*;
+
+/**
+ * @Author José Antonio Espinoza, based on Pildoras Informáticas' source code.
+ * This class is the one runnable, it starts a chain of class calling to complete the process.
+ */
 public class Cliente {
 
     public static void main(String[] args) {
         // TODO Auto-generated method stub
 
-        MarcoCliente mimarco=new MarcoCliente();
+        ClientFrame my_frame =new ClientFrame();
 
-        mimarco.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        my_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
     }
 
 }
 
 
-class MarcoCliente extends JFrame{
+class ClientFrame extends JFrame{
 
-    public MarcoCliente(){
+    public ClientFrame(){
 
         setBounds(0,0,600,430);
 
+        ClientFrame_Canvas my_canvas = new ClientFrame_Canvas();
 
-        LaminaMarcoCliente milamina=new LaminaMarcoCliente();
-
-        add(milamina);
+        add(my_canvas);
 
         setVisible(true);
     }
 
 }
 
-class LaminaMarcoCliente extends JPanel implements Runnable{
+class ClientFrame_Canvas extends JPanel implements Runnable{
 
-    public LaminaMarcoCliente(){
+    public ClientFrame_Canvas(){
 
+        JLabel nick_label =new JLabel("Username:");
+        add(nick_label);
 
+        username_input = new JTextField(10);
+        add(username_input);
 
-        JLabel texto_nombre=new JLabel("Nombre de Usuario:");
+        JLabel ip_label = new JLabel("       Receiver's IP Address:");
+        add(ip_label);
 
-        add(texto_nombre);
+        ip_input = new JTextField(15);
+        add(ip_input);
 
-        nick = new JTextField(10);
-        add(nick);
+        JLabel chat_label = new JLabel("\n" + "       CHAT:            ");
+        add(chat_label);
 
-        JLabel texto_ip = new JLabel("       IP del Destinatario:");
+        chat_frame = new JTextArea(17,48);
+        add(chat_frame);
 
-        add(texto_ip);
+        text_input =new JTextField(45);
+        add(text_input);
 
-
-        ip = new JTextField(15);
-
-        add(ip);
-
-        JLabel Texto_chat = new JLabel("\n" + "       CHAT:            ");
-
-        add(Texto_chat);
-
-        campochat = new JTextArea(17,48);
-
-        add(campochat);
-
-        campo1=new JTextField(45);
-
-        add(campo1);
-
-        miboton=new JButton("Enviar");
+        send_Button =new JButton("Enviar");
 
         EnviaTexto mievento = new EnviaTexto();
 
-        miboton.addActionListener(mievento);
-
-        add(miboton);
+        send_Button.addActionListener(mievento);
+        add(send_Button);
 
         Thread mihilo = new Thread(this);
-
         mihilo.start();
 
 
@@ -91,7 +84,7 @@ class LaminaMarcoCliente extends JPanel implements Runnable{
 
             Socket cliente;
 
-            PaqueteEnvio paqueteRecibido;
+            Sendable_Package paqueteRecibido;
 
             while (true){
                 cliente = servidor_cliente.accept();
@@ -99,9 +92,9 @@ class LaminaMarcoCliente extends JPanel implements Runnable{
 
                 ObjectInputStream flujoentrada = new ObjectInputStream(cliente.getInputStream());
 
-                paqueteRecibido = (PaqueteEnvio) flujoentrada.readObject();
+                paqueteRecibido = (Sendable_Package) flujoentrada.readObject();
 
-                campochat.append("\n"+paqueteRecibido.getNick()+": "+ paqueteRecibido.getMensaje());
+                chat_frame.append("\n"+paqueteRecibido.getNick()+": "+ paqueteRecibido.getMensaje());
             }
 
         }catch(Exception e){
@@ -114,18 +107,18 @@ class LaminaMarcoCliente extends JPanel implements Runnable{
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
 
-            campochat.append("\n" + campo1.getText());
+            chat_frame.append("\n" + text_input.getText());
 
             try {
                 Socket misocket=new Socket("192.168.0.14", 9999);
 
-                PaqueteEnvio datos = new PaqueteEnvio();
+                Sendable_Package datos = new Sendable_Package();
 
-                datos.setNick(nick.getText());
+                datos.setNick(username_input.getText());
 
-                datos.setIp(ip.getText());
+                datos.setIp(ip_input.getText());
 
-                datos.setMensaje(campo1.getText());
+                datos.setMensaje(text_input.getText());
 
                 ObjectOutputStream paquete_datos = new ObjectOutputStream(misocket.getOutputStream());
 
@@ -149,15 +142,15 @@ class LaminaMarcoCliente extends JPanel implements Runnable{
         }
     }
 
-    private JTextField campo1, nick, ip;
-    private JTextArea campochat;
+    private JTextField text_input, username_input, ip_input;
+    private JTextArea chat_frame;
 
 
-    private JButton miboton;
+    private JButton send_Button;
 
 }
 
-class PaqueteEnvio implements Serializable{//Hay que serializarlo (convertir a binario el objeto de datos para que pueda viajar por la red en forma de paquetes
+class Sendable_Package implements Serializable{//Hay que serializarlo (convertir a binario el objeto de datos para que pueda viajar por la red en forma de paquetes
     private String nick,ip,mensaje;
 
     public String getNick() {

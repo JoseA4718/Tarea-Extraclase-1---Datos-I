@@ -11,87 +11,81 @@ public class Server  {
     public static void main(String[] args) {
         // TODO Auto-generated method stub
 
-        MarcoServidor mimarco=new MarcoServidor();
+        Server_Frame my_server_frame = new Server_Frame();
 
-        mimarco.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        my_server_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
     }
 }
 
-class MarcoServidor extends JFrame implements Runnable {
+class Server_Frame extends JFrame implements Runnable {
 
-    public MarcoServidor(){
+    public Server_Frame(){
 
         setBounds(300,300,500,350);
 
-        JPanel milamina= new JPanel();
+        JPanel my_server_sheet = new JPanel();
 
-        milamina.setLayout(new BorderLayout());
+        my_server_sheet.setLayout(new BorderLayout());
 
-        areatexto=new JTextArea();
+        text_area = new JTextArea();
 
-        milamina.add(areatexto,BorderLayout.CENTER);
+        my_server_sheet.add(text_area,BorderLayout.CENTER);
 
-        add(milamina);
+        add(my_server_sheet);
 
         setVisible(true);
 
-        Thread mihilo=new Thread(this);
+        Thread frame_thread = new Thread(this);
 
-        mihilo.start();
+        frame_thread.start();
     }
 
 
     @Override
     public void run() {
         try {
-            ServerSocket servidor = new ServerSocket(9999);
+            ServerSocket socket_input = new ServerSocket(9999);
 
-            String nick,ip,mensaje;
+            String username,ip_address,message;
 
-            PaqueteEnvio paquete_recibido;
-
-
-            while(true) {
-
-                Socket misocket = servidor.accept();
-
-                 ObjectInputStream paquete_datos = new ObjectInputStream(misocket.getInputStream());
-
-                 paquete_recibido = (PaqueteEnvio) paquete_datos.readObject();
-
-                 nick = paquete_recibido.getNick();
-
-                 ip = paquete_recibido.getIp();
-
-                 mensaje = paquete_recibido.getMensaje();
+            Sendable_Package received_package;
 
 
+            while(true)  {
 
-                /*DataInputStream flujo_entrada = new DataInputStream(misocket.getInputStream());
+                Socket in_socket = socket_input.accept();
 
-                String mensaje_texto = flujo_entrada.readUTF();
+                 ObjectInputStream data_package = new ObjectInputStream(in_socket.getInputStream());
 
-                areatexto.append("\n" + mensaje_texto);*/
+                 received_package = (Sendable_Package) data_package.readObject();
 
-                areatexto.append("\n" + nick + ": " + mensaje+ " para " + ip);
+                 username = received_package.getNick();
 
-                Socket enviaDestinatario = new Socket(ip,9090);
+                 ip_address = received_package.getIp();
 
-                ObjectOutputStream paquete_Reenvio = new ObjectOutputStream(enviaDestinatario.getOutputStream());
+                 message = received_package.getMensaje();
 
-                paquete_Reenvio.writeObject(paquete_recibido);
+                text_area.append("\n" + username + ": " + message + " sent a message to >> " + ip_address);
 
-                paquete_Reenvio.close();
+                //SE VA A CREAR UN NUEVO SOCKET PARA EL PROCESO DE ENVÍO DE DATOS AL OTRO CLIENTE
 
-                enviaDestinatario.close();
+                Socket sending_path = new Socket(ip_address,9090);
 
-                misocket.close();
+                ObjectOutputStream re_sendable_package = new ObjectOutputStream(sending_path.getOutputStream());
+
+                re_sendable_package.writeObject(received_package);
+
+                re_sendable_package.close();
+
+                sending_path.close();
+
+                in_socket.close();
             }
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
 
-    private	JTextArea areatexto;
+    private	JTextArea text_area;
 }
