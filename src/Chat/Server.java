@@ -68,7 +68,7 @@ class Server_Frame extends JFrame implements Runnable {
 
                 text_area.append("\n" + username + ": " + message + " sent a message to >> " + ip_address);
 
-                //SE VA A CREAR UN NUEVO SOCKET PARA EL PROCESO DE ENVÍO DE DATOS AL OTRO CLIENTE
+                //SE VA A CREAR UN NUEVO SOCKET PARA EL PROCESO DE ENVIO DE DATOS AL OTRO CLIENTE
 
                 Socket sending_path = new Socket(ip_address,9090);
 
