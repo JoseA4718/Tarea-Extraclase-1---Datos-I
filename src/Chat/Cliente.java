@@ -23,7 +23,8 @@ class MarcoCliente extends JFrame{
 
     public MarcoCliente(){
 
-        setBounds(600,300,280,350);
+        setBounds(0,0,600,430);
+
 
         LaminaMarcoCliente milamina=new LaminaMarcoCliente();
 
@@ -38,21 +39,33 @@ class LaminaMarcoCliente extends JPanel implements Runnable{
 
     public LaminaMarcoCliente(){
 
-        nick = new JTextField(5);
+
+
+        JLabel texto_nombre=new JLabel("Nombre de Usuario:");
+
+        add(texto_nombre);
+
+        nick = new JTextField(10);
         add(nick);
 
-        JLabel texto=new JLabel("CHAT");
+        JLabel texto_ip = new JLabel("       IP del Destinatario:");
 
-        add(texto);
+        add(texto_ip);
 
-        ip = new JTextField(8);
+
+        ip = new JTextField(15);
+
         add(ip);
 
-        campochat = new JTextArea(12,20);
+        JLabel Texto_chat = new JLabel("\n" + "       CHAT:            ");
+
+        add(Texto_chat);
+
+        campochat = new JTextArea(17,48);
 
         add(campochat);
 
-        campo1=new JTextField(20);
+        campo1=new JTextField(45);
 
         add(campo1);
 
@@ -82,6 +95,7 @@ class LaminaMarcoCliente extends JPanel implements Runnable{
 
             while (true){
                 cliente = servidor_cliente.accept();
+
 
                 ObjectInputStream flujoentrada = new ObjectInputStream(cliente.getInputStream());
 

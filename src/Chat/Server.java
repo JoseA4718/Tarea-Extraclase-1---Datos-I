@@ -22,7 +22,7 @@ class MarcoServidor extends JFrame implements Runnable {
 
     public MarcoServidor(){
 
-        setBounds(1200,300,280,350);
+        setBounds(300,300,500,350);
 
         JPanel milamina= new JPanel();
 
