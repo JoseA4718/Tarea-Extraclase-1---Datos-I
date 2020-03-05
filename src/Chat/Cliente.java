@@ -9,7 +9,7 @@ import java.io.*;
 import java.net.*;
 
 /**
- * @Author José Antonio Espinoza, based on Pildoras Informáticas' source code.
+ * @Author José Antonio Espinoza, based on Pildoras Informáticas' socket programming tutorial.
  * This class is the one runnable, it starts a chain of class calling to complete the process.
  */
 public class Cliente {
